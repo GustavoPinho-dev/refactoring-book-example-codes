@@ -35,7 +35,7 @@ def statement(invoice, plays):
     return f"${amount:0,.2f}"
 
   for perf in invoice['performances']:
-    this_amount = amount_for(perf, play_for(perf))
+    this_amount = amount_for(perf)
 
     # add volume credits
     volume_credits += max(perf['audience'] - 30, 0)
