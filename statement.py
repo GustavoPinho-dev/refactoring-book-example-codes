@@ -1,23 +1,23 @@
 import math
 
 
-def amount_for(perf, play):
-  this_amount = 0
+def amount_for(a_performance, play):
+  result = 0
   if play['type'] == "tragedy":
-    this_amount = 40000
-    if perf['audience'] > 30:
-      this_amount += 1000 * (perf['audience'] - 30)
+    result = 40000
+    if a_performance['audience'] > 30:
+      result += 1000 * (a_performance['audience'] - 30)
   elif play['type'] == "comedy":
-    this_amount = 30000
-    if perf['audience'] > 20:
-      this_amount += 10000 + 500 * (perf['audience'] - 20)
+    result = 30000
+    if a_performance['audience'] > 20:
+      result += 10000 + 500 * (a_performance['audience'] - 20)
 
-    this_amount += 300 * perf['audience']
+    result += 300 * a_performance['audience']
 
   else:
     raise ValueError(f'unknown type: {play["type"]}')
   
-  return this_amount
+  return result
 
 def statement(invoice, plays):
   total_amount = 0
