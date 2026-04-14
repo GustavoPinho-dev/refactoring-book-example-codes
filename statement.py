@@ -1,5 +1,12 @@
 import math
+import json
 
+
+with open('plays.json', 'r') as file:
+  plays = json.load(file)
+
+def play_for(a_performance):
+  return plays[a_performance["playID"]]
 
 def amount_for(a_performance, play):
   result = 0
@@ -28,7 +35,7 @@ def statement(invoice, plays):
     return f"${amount:0,.2f}"
 
   for perf in invoice['performances']:
-    play = plays[perf['playID']]
+    play = play_for(perf)
     this_amount = amount_for(perf, play)
 
     # add volume credits
