@@ -56,10 +56,8 @@ def statement(invoice, plays):
 
     result += f' {play_for(perf)["name"]}: {format(amount_for(perf)/100)} ({perf["audience"]} seats)\n'
     total_amount += amount_for(perf)
-  
-  volume_credits = total_volume_credits()
 
   result += f'Amount owed is {format(total_amount)}\n'
-  result += f'You earned {volume_credits} credits\n'
+  result += f'You earned {total_volume_credits()} credits\n'
   return result
 
