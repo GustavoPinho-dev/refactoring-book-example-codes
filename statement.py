@@ -5,6 +5,9 @@ import json
 with open('plays.json', 'r') as file:
   plays = json.load(file)
 
+with open('invoices.json', 'r') as file:
+  invoice = json.load(file)
+
 def play_for(a_performance):
   return plays[a_performance["playID"]]
 
@@ -37,16 +40,24 @@ def amount_for(a_performance):
 def format(a_number):
     return f"${a_number/100:0,.2f}"
 
+def total_volume_credits():
+  volume_credits = 0
+  for perf in invoice[0]['performances']:
+    volume_credits += volume_credits_for(perf)
+  
+  return volume_credits
+
+
 def statement(invoice, plays):
   total_amount = 0
-  volume_credits = 0
   result = f'Statement for {invoice["customer"]}\n'
 
   for perf in invoice['performances']:
-    volume_credits += volume_credits_for(perf)
 
     result += f' {play_for(perf)["name"]}: {format(amount_for(perf)/100)} ({perf["audience"]} seats)\n'
     total_amount += amount_for(perf)
+  
+  volume_credits = total_volume_credits()
 
   result += f'Amount owed is {format(total_amount)}\n'
   result += f'You earned {volume_credits} credits\n'
