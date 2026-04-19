@@ -8,13 +8,13 @@ with open('plays.json', 'r') as file:
 def play_for(a_performance):
   return plays[a_performance["playID"]]
 
-def volume_credits_for(perf):
-  volume_credits = 0
-  volume_credits += max(perf['audience'] - 30, 0)
-  if "comedy" == play_for(perf)["type"]:
-    volume_credits += math.floor(perf['audience'] / 5)
+def volume_credits_for(a_performance):
+  result = 0
+  result += max(a_performance['audience'] - 30, 0)
+  if "comedy" == play_for(a_performance)["type"]:
+    result += math.floor(a_performance['audience'] / 5)
 
-  return volume_credits
+  return result
 
 def amount_for(a_performance):
   result = 0
