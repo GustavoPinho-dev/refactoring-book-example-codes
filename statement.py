@@ -41,11 +41,11 @@ def format(a_number):
     return f"${a_number/100:0,.2f}"
 
 def total_volume_credits():
-  volume_credits = 0
+  result = 0
   for perf in invoice[0]['performances']:
-    volume_credits += volume_credits_for(perf)
+    result += volume_credits_for(perf)
   
-  return volume_credits
+  return result
 
 
 def statement(invoice, plays):
