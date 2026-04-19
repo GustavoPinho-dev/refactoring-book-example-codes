@@ -8,8 +8,31 @@ with open('plays.json', 'r') as file:
 with open('invoices.json', 'r') as file:
   invoice = json.load(file)
 
-def play_for(a_performance):
-  return plays[a_performance["playID"]]
+def statement(invoice, plays):
+  result = f'Statement for {invoice["customer"]}\n'
+
+  for perf in invoice['performances']:
+    result += f' {play_for(perf)["name"]}: {format(amount_for(perf)/100)} ({perf["audience"]} seats)\n'
+
+  result += f'Amount owed is {format(total_amount())}\n'
+  result += f'You earned {total_volume_credits()} credits\n'
+  return result
+
+def total_amount():
+  result = 0
+  for perf in invoice[0]['performances']:
+    result += amount_for(perf)
+  return result
+
+def total_volume_credits():
+  result = 0
+  for perf in invoice[0]['performances']:
+    result += volume_credits_for(perf)
+  
+  return result
+
+def format(a_number):
+    return f"${a_number/100:0,.2f}"
 
 def volume_credits_for(a_performance):
   result = 0
@@ -18,6 +41,9 @@ def volume_credits_for(a_performance):
     result += math.floor(a_performance['audience'] / 5)
 
   return result
+
+def play_for(a_performance):
+  return plays[a_performance["playID"]]
 
 def amount_for(a_performance):
   result = 0
@@ -36,30 +62,3 @@ def amount_for(a_performance):
     raise ValueError(f'unknown type: {play_for(a_performance)["type"]}')
   
   return result
-
-def format(a_number):
-    return f"${a_number/100:0,.2f}"
-
-def total_volume_credits():
-  result = 0
-  for perf in invoice[0]['performances']:
-    result += volume_credits_for(perf)
-  
-  return result
-
-def total_amount():
-  result = 0
-  for perf in invoice[0]['performances']:
-    result += amount_for(perf)
-  return result
-
-def statement(invoice, plays):
-  result = f'Statement for {invoice["customer"]}\n'
-
-  for perf in invoice['performances']:
-    result += f' {play_for(perf)["name"]}: {format(amount_for(perf)/100)} ({perf["audience"]} seats)\n'
-
-  result += f'Amount owed is {format(total_amount())}\n'
-  result += f'You earned {total_volume_credits()} credits\n'
-  return result
-
