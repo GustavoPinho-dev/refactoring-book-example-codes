@@ -34,21 +34,21 @@ def amount_for(a_performance):
   
   return result
 
+def format(a_number):
+    return f"${a_number/100:0,.2f}"
+
 def statement(invoice, plays):
   total_amount = 0
   volume_credits = 0
   result = f'Statement for {invoice["customer"]}\n'
 
-  def format_as_dollars(amount):
-    return f"${amount:0,.2f}"
-
   for perf in invoice['performances']:
     volume_credits += volume_credits_for(perf)
 
-    result += f' {play_for(perf)["name"]}: {format_as_dollars(amount_for(perf)/100)} ({perf["audience"]} seats)\n'
+    result += f' {play_for(perf)["name"]}: {format(amount_for(perf)/100)} ({perf["audience"]} seats)\n'
     total_amount += amount_for(perf)
 
-  result += f'Amount owed is {format_as_dollars(total_amount/100)}\n'
+  result += f'Amount owed is {format(total_amount)}\n'
   result += f'You earned {volume_credits} credits\n'
   return result
 
