@@ -51,15 +51,19 @@ def statement(invoice, plays):
     result['volume_credits'] = volume_credits_for(result)
     return result
 
-  statement_data = {}
-  statement_data['customer'] = invoice['customer']
-  statement_data["performances"] = [
-    enrich_performance(performance)
-    for performance in invoice["performances"]
-  ]
-  statement_data['total_amount'] = total_amount(statement_data)
-  statement_data['total_volume_credits'] = total_volume_credits(statement_data)
-  return render_plain_text(statement_data, plays)
+  def create_statement_data(invoice, plays):
+    statement_data = {}
+    statement_data['customer'] = invoice['customer']
+    statement_data["performances"] = [
+      enrich_performance(performance)
+      for performance in invoice["performances"]
+    ]
+    statement_data['total_amount'] = total_amount(statement_data)
+    statement_data['total_volume_credits'] = total_volume_credits(statement_data)
+    return statement_data
+  
+  return render_plain_text(create_statement_data(invoice, plays))
+
 
 def render_plain_text(data, plays):
 
