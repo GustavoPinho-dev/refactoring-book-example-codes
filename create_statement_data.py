@@ -1,5 +1,10 @@
 import math
 
+class PerformanceCalculator:
+  def __init__(self, a_performance, a_play):
+    self.performance = a_performance
+    self.play = a_play
+
 def create_statement_data(invoice, plays):
 
   def play_for(a_performance):
@@ -38,8 +43,9 @@ def create_statement_data(invoice, plays):
     return sum(p["volume_credits"] for p in data["performances"])
   
   def enrich_performance(a_performance):
+    calculator = PerformanceCalculator(a_performance, play_for(a_performance))
     result = dict(a_performance)
-    result['play'] = play_for(result)
+    result['play'] = calculator.play
     result['amount'] = amount_for(result)
     result['volume_credits'] = volume_credits_for(result)
     return result
