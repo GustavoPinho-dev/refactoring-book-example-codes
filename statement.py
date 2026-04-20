@@ -38,6 +38,19 @@ def statement(invoice, plays):
 
     return result
 
+  def total_amount(data):
+    result = 0
+    for perf in data['performances']:
+      result += perf['amount']
+    return result
+  
+  def total_volume_credits(data):
+    result = 0
+    for perf in data['performances']:
+      result += perf['volume_credits']
+    
+    return result
+
   def enrich_performance(a_performance):
     result = dict(a_performance)
     result['play'] = play_for(result)
@@ -51,33 +64,20 @@ def statement(invoice, plays):
     enrich_performance(performance)
     for performance in invoice["performances"]
   ]
+  statement_data['total_amount'] = total_amount(statement_data)
+  statement_data['total_volume_credits'] = total_volume_credits(statement_data)
   return render_plain_text(statement_data, plays)
 
 def render_plain_text(data, plays):
-  
-  def total_amount():
-    result = 0
-    for perf in data['performances']:
-      result += perf['amount']
-    return result
-
-  def total_volume_credits():
-    result = 0
-    for perf in data['performances']:
-      result += perf['volume_credits']
-    
-    return result
 
   def format(a_number):
-      return f"${a_number/100:0,.2f}"
-
-  
+    return f"${a_number/100:0,.2f}"
   
   result = f'Statement for {data["customer"]}\n'
 
   for perf in data['performances']:
     result += f' {perf["play"]["name"]}: {format(perf['amount'])} ({perf["audience"]} seats)\n'
 
-  result += f'Amount owed is {format(total_amount())}\n'
-  result += f'You earned {total_volume_credits()} credits\n'
+  result += f'Amount owed is {format(data['total_amount'])}\n'
+  result += f'You earned {data['total_volume_credits']} credits\n'
   return result
