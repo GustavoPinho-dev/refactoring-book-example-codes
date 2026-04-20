@@ -1,0 +1,55 @@
+import math
+
+def create_statement_data(invoice, plays):
+
+  def play_for(a_performance):
+    return plays[a_performance["playID"]]
+  
+  def amount_for(a_performance):
+    result = 0
+    if a_performance["play"]["type"] == "tragedy":
+      result = 40000
+      if a_performance['audience'] > 30:
+        result += 1000 * (a_performance['audience'] - 30)
+    elif a_performance["play"]["type"] == "comedy":
+      result = 30000
+      if a_performance['audience'] > 20:
+        result += 10000 + 500 * (a_performance['audience'] - 20)
+
+      result += 300 * a_performance['audience']
+
+    else:
+      raise ValueError(f'unknown type: {a_performance["play"]["type"]}')
+    
+    return result
+
+  def volume_credits_for(a_performance):
+    result = 0
+    result += max(a_performance['audience'] - 30, 0)
+    if "comedy" == a_performance["play"]["type"]:
+      result += math.floor(a_performance['audience'] / 5)
+
+    return result
+
+  def total_amount(data):
+    return sum(p["amount"] for p in data["performances"])
+  
+  def total_volume_credits(data):
+    return sum(p["volume_credits"] for p in data["performances"])
+  
+  def enrich_performance(a_performance):
+    result = dict(a_performance)
+    result['play'] = play_for(result)
+    result['amount'] = amount_for(result)
+    result['volume_credits'] = volume_credits_for(result)
+    return result
+
+  result = {}
+  result['customer'] = invoice['customer']
+  result["performances"] = [
+    enrich_performance(performance)
+    for performance in invoice["performances"]
+  ]
+  result['total_amount'] = total_amount(result)
+  result['total_volume_credits'] = total_volume_credits(result)
+  return result
