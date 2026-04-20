@@ -39,17 +39,10 @@ def statement(invoice, plays):
     return result
 
   def total_amount(data):
-    result = 0
-    for perf in data['performances']:
-      result += perf['amount']
-    return result
+    return sum(p["amount"] for p in data["performances"])
   
   def total_volume_credits(data):
-    result = 0
-    for perf in data['performances']:
-      result += perf['volume_credits']
-    
-    return result
+    return sum(p["volume_credits"] for p in data["performances"])
 
   def enrich_performance(a_performance):
     result = dict(a_performance)
