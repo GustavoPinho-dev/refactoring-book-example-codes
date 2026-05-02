@@ -8,20 +8,7 @@ class PerformanceCalculator:
 
   @property
   def amount(self):
-    result = 0
-    if self.play["type"] == "tragedy":
-      raise 'bad thing'
-    elif self.play["type"] == "comedy":
-      result = 30000
-      if self.performance['audience'] > 20:
-        result += 10000 + 500 * (self.performance['audience'] - 20)
-
-      result += 300 * self.performance['audience']
-
-    else:
-      raise ValueError(f'unknown type: {self.play["type"]}')
-    
-    return result
+    raise ValueError('subclass responsability')
 
   @property
   def volume_credits(self):
@@ -50,7 +37,13 @@ class TragedyCalculator(PerformanceCalculator):
     return result
 
 class ComedyCalculator(PerformanceCalculator):
-  pass
+  @property
+  def amount(self):
+    result = 30000
+    if self.performance["audience"] > 20:
+      result += 1000 + 500 * (self.performance["audience"] - 20)
+    result += 300 * self.performance["audience"]
+    return result
 
 def create_statement_data(invoice, plays):
 
