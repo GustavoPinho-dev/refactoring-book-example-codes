@@ -12,12 +12,7 @@ class PerformanceCalculator:
 
   @property
   def volume_credits(self):
-    result = 0
-    result += max(self.performance['audience'] - 30, 0)
-    if "comedy" == self.play["type"]:
-      result += math.floor(self.performance['audience'] / 5)
-
-    return result
+    return max(self.performance['audience'] - 30, 0)
 
 def create_performance_calculator(a_performance, a_play):
   if a_play['type'] == "tragedy":
@@ -44,6 +39,10 @@ class ComedyCalculator(PerformanceCalculator):
       result += 1000 + 500 * (self.performance["audience"] - 20)
     result += 300 * self.performance["audience"]
     return result
+  
+  @property
+  def volume_credits(self):
+    return super().volume_credits + math.floor(self.performance['audience'] / 5)
 
 def create_statement_data(invoice, plays):
 
