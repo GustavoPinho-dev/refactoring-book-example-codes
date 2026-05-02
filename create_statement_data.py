@@ -10,9 +10,7 @@ class PerformanceCalculator:
   def amount(self):
     result = 0
     if self.play["type"] == "tragedy":
-      result = 40000
-      if self.performance['audience'] > 30:
-        result += 1000 * (self.performance['audience'] - 30)
+      raise 'bad thing'
     elif self.play["type"] == "comedy":
       result = 30000
       if self.performance['audience'] > 20:
@@ -34,6 +32,25 @@ class PerformanceCalculator:
 
     return result
 
+def create_performance_calculator(a_performance, a_play):
+  if a_play['type'] == "tragedy":
+    return TragedyCalculator(a_performance, a_play)
+  elif a_play['type'] == "comedy":
+    return ComedyCalculator(a_performance, a_play)
+
+  else:
+    raise ValueError(f'unknown type: {a_play["type"]}')
+
+class TragedyCalculator(PerformanceCalculator):
+  @property
+  def amount(self):
+    result = 40000
+    if self.performance["audience"] > 30:
+      result += 1000 * (self.performance["audience"] - 30)
+    return result
+
+class ComedyCalculator(PerformanceCalculator):
+  pass
 
 def create_statement_data(invoice, plays):
 
@@ -53,7 +70,7 @@ def create_statement_data(invoice, plays):
     return sum(p["volume_credits"] for p in data["performances"])
   
   def enrich_performance(a_performance):
-    calculator = PerformanceCalculator(a_performance, play_for(a_performance))
+    calculator = create_performance_calculator(a_performance, play_for(a_performance))
     result = dict(a_performance)
     result['play'] = calculator.play
     result['amount'] = calculator.amount
