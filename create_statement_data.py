@@ -25,6 +25,16 @@ class PerformanceCalculator:
     
     return result
 
+  @property
+  def volume_credits(self):
+    result = 0
+    result += max(self.performance['audience'] - 30, 0)
+    if "comedy" == self.play["type"]:
+      result += math.floor(self.performance['audience'] / 5)
+
+    return result
+
+
 def create_statement_data(invoice, plays):
 
   def play_for(a_performance):
@@ -34,12 +44,7 @@ def create_statement_data(invoice, plays):
     return PerformanceCalculator(a_performance, play_for(a_performance)).amount
 
   def volume_credits_for(a_performance):
-    result = 0
-    result += max(a_performance['audience'] - 30, 0)
-    if "comedy" == a_performance["play"]["type"]:
-      result += math.floor(a_performance['audience'] / 5)
-
-    return result
+    return PerformanceCalculator(a_performance, play_for(a_performance)).volume_credits
 
   def total_amount(data):
     return sum(p["amount"] for p in data["performances"])
@@ -52,7 +57,7 @@ def create_statement_data(invoice, plays):
     result = dict(a_performance)
     result['play'] = calculator.play
     result['amount'] = calculator.amount
-    result['volume_credits'] = volume_credits_for(result)
+    result['volume_credits'] = calculator.volume_credits
     return result
 
   result = {}
